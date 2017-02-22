@@ -73,19 +73,19 @@ public class Carta
         return textoADevolver;
     }
   
-  public boolean ganaA(Carta cartaAComparar, int paloQuePinta)
+  public boolean ganaA(Carta cartaACompararPreviamenteTirada, int paloQuePinta)
   {
   	boolean gana = false;
     
-    if (palo == cartaAComparar.getPalo()) {
+    if (palo == cartaACompararPreviamenteTirada.getPalo()) {
       // En caso de que tengan el mismo palo...
-      if (getPosicionEscalaTute() > cartaAComparar.getPosicionEscalaTute()) {
+      if (getPosicionEscalaTute() > cartaACompararPreviamenteTirada.getPosicionEscalaTute()) {
         gana = true;
       }
     }
     else {
       // En caso de que tengan distinto palo...
-      if (cartaAComparar.getPalo() != paloQuePinta) {
+      if (palo == paloQuePinta) {
         gana = true;
       }
     } 

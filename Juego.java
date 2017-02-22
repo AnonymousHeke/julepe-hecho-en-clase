@@ -12,6 +12,7 @@ public class Juego
     private Jugador[] jugadores;
     private Mazo mazo;
     private int paloQuePinta;
+    private static final int NUMERO_DE_RONDAS = 5;
 
 
     /**
@@ -108,7 +109,17 @@ public class Juego
      */
     private int encontrarPosicionJugadorPorNombre(String nombre)
     {
+        int posicionEncontrada = -1;
         
+        int jugadorActual = 0;
+        while (jugadorActual < jugadores.length && posicionEncontrada == -1) {
+            if (jugadores[jugadorActual].getNombre().equals(nombre)) {
+                posicionEncontrada = jugadorActual;
+            }            
+            jugadorActual++;
+        } 
+        
+        return posicionEncontrada;
     }
     
         
@@ -137,7 +148,48 @@ public class Juego
      */
     private void jugar()
     {
-
+        repartir();
+        
+        Scanner entrada = new Scanner(System.in);
+        for (int cartasEnLaMano = NUMERO_DE_RONDAS; cartasEnLaMano != 0; cartasEnLaMano--) {
+            Carta cartaTiradaPorHumano = null;
+            while (cartaTiradaPorHumano == null) {
+                System.out.println("\nEstas son tus cartas:");
+                jugadores[0].verCartasJugador();
+                System.out.println("\nIndica cúal quieres tirar:");
+                String nombreCartaElegida = entrada.nextLine();
+                
+                cartaTiradaPorHumano = jugadores[0].tirarCarta(nombreCartaElegida);
+                if (cartaTiradaPorHumano == null) {
+                    System.out.println("Error: no tienes esa carta!!");
+                }
+            } 
+            
+            Baza bazaActual = new Baza(jugadores.length, paloQuePinta);
+            bazaActual.addCarta(cartaTiradaPorHumano, jugadores[0].getNombre());
+            
+            for (int i = 1; i < jugadores.length; i++) {    
+                Jugador jugadorActual = jugadores[i];
+                Carta cartaTiradaBot = jugadorActual.tirarCartaInteligentemente(bazaActual.getPaloPrimeraCartaDeLaBaza(), 
+                                                         bazaActual.cartaQueVaGanandoLaBaza(), 
+                                                         paloQuePinta);
+                bazaActual.addCarta(cartaTiradaBot, jugadorActual.getNombre());
+            }
+            
+            String nombreGanador = bazaActual.nombreJugadorQueVaGanandoLaBaza();
+            int posicionGanador = encontrarPosicionJugadorPorNombre(nombreGanador);
+            jugadores[posicionGanador].addBaza(bazaActual);
+        }
+        
+        System.out.println("\nFin del juego!!!");
+        System.out.println("Te has llevado " + jugadores[0].getNumeroBazasGanadas() + " bazas");
+        if (jugadores[0].getNumeroBazasGanadas() < 2) {
+            System.out.println("Eres julepe (has perdido)");
+        }
+        else {
+            System.out.println("No eres julepe (has ganado)");            
+        }    
+            
         
     }    
 }
