@@ -146,6 +146,7 @@ public class Juego
                 jugadores[0].verCartasJugador();
                 System.out.println("\nIndica cúal quieres tirar:");
                 String nombreCartaElegida = entrada.nextLine();
+                System.out.println();
                 
                 cartaTiradaPorHumano = jugadores[0].tirarCarta(nombreCartaElegida);
                 if (cartaTiradaPorHumano == null) {
@@ -167,6 +168,7 @@ public class Juego
             String nombreGanador = bazaActual.nombreJugadorQueVaGanandoLaBaza();
             int posicionGanador = encontrarPosicionJugadorPorNombre(nombreGanador);
             jugadores[posicionGanador].addBaza(bazaActual);
+            System.out.println("Gana la baza " + nombreGanador);
         }
         
         System.out.println("\nFin del juego!!!");

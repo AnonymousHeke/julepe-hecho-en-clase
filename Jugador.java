@@ -44,7 +44,7 @@ public class Jugador
     {
         for (Carta cartaActual : cartasQueTieneEnLaMano) {
             if (cartaActual != null) {
-                System.out.println(cartaActual);
+                System.out.println("- " + cartaActual);
             }
         }
     }
@@ -77,7 +77,23 @@ public class Jugador
                         cartaTirada = cartasQueTieneEnLaMano[cartaActual];
                         cartasQueTieneEnLaMano[cartaActual] = null;
                         numeroCartasEnLaMano--;
-                        System.out.println(nombre + " ha tirado " + cartaTirada);
+                        System.out.print(nombre + " ha tirado " + cartaTirada);
+                        
+                        // Se muestran por pantalla las cartas que le quedan 
+                        String cartasQueLeQuedan = "";
+                        for (Carta carta : cartasQueTieneEnLaMano) {
+                            if (carta != null) {
+                                cartasQueLeQuedan += carta + " - ";
+                            }
+                        }
+                        
+                        if (cartasQueLeQuedan.length() > 0) {
+                            System.out.println(" (le quedan: " + cartasQueLeQuedan.substring(0, cartasQueLeQuedan.length() - 3) + ")");
+                        }
+                        else {
+                            System.out.println();
+                        }
+                        
                     }
                 }
                 cartaActual++;
@@ -107,11 +123,10 @@ public class Jugador
             while (elJugadorHaTiradoUnaCarta == false) {
                 int posicionAleatoria = aleatorio.nextInt(5);
                 if (cartasQueTieneEnLaMano[posicionAleatoria] != null) {
-                    cartaTirada = cartasQueTieneEnLaMano[posicionAleatoria];
-                    cartasQueTieneEnLaMano[posicionAleatoria] = null;
-                    numeroCartasEnLaMano--;
-                    System.out.println(nombre + " ha tirado " + cartaTirada);
+                    cartaTirada = tirarCarta(cartasQueTieneEnLaMano[posicionAleatoria].toString());
                     elJugadorHaTiradoUnaCarta = true;
+                    
+                    
                 }
             }
             
@@ -128,7 +143,64 @@ public class Jugador
                                             Carta cartaQueVaGanando,
                                             Palo paloQuePinta)
     {
-        return tirarCartaAleatoria();        
+        Carta cartaTirada = null;
+        Carta cartaATirar = null;
+        
+        // Si puedo asistir y ganar, lo hago
+        int i = 0;
+        while (i < cartasQueTieneEnLaMano.length && cartaATirar == null) {
+            if (cartasQueTieneEnLaMano[i] != null) {
+                if (cartasQueTieneEnLaMano[i].getPalo() == paloPrimeraCartaDeLaBaza) {
+                    if (cartasQueTieneEnLaMano[i].ganaA(cartaQueVaGanando, paloQuePinta)) {
+                        cartaATirar = cartasQueTieneEnLaMano[i];
+                    }
+                }
+            }
+            i++;
+        }
+       
+        // Si no
+        if (cartaATirar == null) {
+            
+            // Si puedo asistir, lo hago
+            i = 0;
+            while (i < cartasQueTieneEnLaMano.length && cartaATirar == null) {
+                if (cartasQueTieneEnLaMano[i] != null) {                
+                    if (cartasQueTieneEnLaMano[i].getPalo() == paloPrimeraCartaDeLaBaza) {
+                        cartaATirar = cartasQueTieneEnLaMano[i];
+                    }
+                }    
+                i++;                
+            }
+            
+            // Si no
+            if (cartaATirar == null) {
+                
+                // Si puedo fallar y ganar, lo hago
+                i = 0;
+                while (i < cartasQueTieneEnLaMano.length && cartaATirar == null) {
+                    if (cartasQueTieneEnLaMano[i] != null) {                    
+                        if (cartasQueTieneEnLaMano[i].ganaA(cartaQueVaGanando, paloQuePinta)) {
+                            cartaATirar = cartasQueTieneEnLaMano[i];
+                        }
+                    }   
+                    i++;                    
+                }
+                
+                // Si no, tiro una aleatoria
+                if (cartaATirar == null) {
+                    cartaTirada = tirarCartaAleatoria();
+                }
+            }
+            
+        }
+        
+        
+        if (cartaATirar != null) {
+            cartaTirada = tirarCarta(cartaATirar.toString());
+        }
+                             
+        return cartaTirada;
     }
     
     
