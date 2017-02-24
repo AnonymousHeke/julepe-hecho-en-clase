@@ -10,12 +10,12 @@ public class Carta
     // Valor de la carta; de 1 a 7 y de 10 a 12
     private int valor;
     // Valor del palo: 0 es oros, 1 es copas, 2 es espadas y 3 es bastos
-    private int palo;
+    private Palo palo;
 
     /**
      * Constructor for objects of class Carta
      */
-    public Carta(int valor, int palo)
+    public Carta(int valor, Palo palo)
     {
         this.valor = valor;
         this.palo = palo;
@@ -26,7 +26,7 @@ public class Carta
         return valor;
     }
 
-    public int getPalo()
+    public Palo getPalo()
     {
         return palo;
     }
@@ -36,22 +36,7 @@ public class Carta
         String textoADevolver = "";
 
         String textoValor = Integer.toString(valor);
-        String textoPalo = "";
-
-        switch (palo) {
-            case 0:
-            textoPalo = "oros";
-            break;
-            case 1:
-            textoPalo = "copas";
-            break;
-            case 2:
-            textoPalo = "espadas";
-            break;
-            case 3:
-            textoPalo = "bastos";
-            break;
-        }
+        String textoPalo = palo.toString().toLowerCase();
 
         switch (valor) {
             case 1:
@@ -73,7 +58,7 @@ public class Carta
         return textoADevolver;
     }
   
-  public boolean ganaA(Carta cartaACompararPreviamenteTirada, int paloQuePinta)
+  public boolean ganaA(Carta cartaACompararPreviamenteTirada, Palo paloQuePinta)
   {
   	boolean gana = false;
     
